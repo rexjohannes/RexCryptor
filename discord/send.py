@@ -15,7 +15,7 @@ async def on_ready():
     while True:
         msg = input("Message: ")
         encMessage = rsa.encrypt(msg.encode(), publicKey)
-        channel = bot.get_channel(834432850882592878)
+        channel = bot.get_channel(your-channel-id)
         if channel:
             await channel.send(base64.b64encode(encMessage).decode())
 
