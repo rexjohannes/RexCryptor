@@ -6,6 +6,11 @@ import tkinter
 import webbrowser
 import rsa
 import base64
+import requests
+from tkinter import filedialog
+import secrets
+
+encryptinghost = ""
 
 with open('public.pem', mode='rb') as publicfile:
     publicdata = publicfile.read()
@@ -15,6 +20,15 @@ with open('private.pem', mode='rb') as privatefile:
 privateKey = rsa.PrivateKey.load_pkcs1(keydata)
 publicKey = rsa.PublicKey.load_pkcs1_openssl_pem(publicdata)
 
+def uploadfile():
+    tf = filedialog.askopenfilename(title="Select your File")
+    aes_key = secrets.token_hex(5)
+    myfiles = {'file': open(tf, 'rb')}
+    data = {"password": aes_key, "userKey": encryptinghost, "urlStyle": "query", "domains": ["encrypting.host"]}
+    r = requests.post("https://encrypting.host/upload", data=data, files=myfiles)
+    msg = r.text
+    my_msg.set(msg)
+    send()
 
 def receive():
     """Handles receiving of messages."""
@@ -61,7 +75,6 @@ def on_closing(event=None):
 
 top = tkinter.Tk()
 top.title("RSA-IRC")
-
 messages_frame = tkinter.Frame(top)
 my_msg = tkinter.StringVar()  # For the messages to be sent.
 my_msg.set("")
@@ -75,14 +88,15 @@ messages_frame.pack()
 
 entry_field = tkinter.Entry(top, textvariable=my_msg)
 entry_field.bind("<Return>", send)
+tkinter.Button(top, text="File", command=uploadfile).pack(side=tkinter.LEFT)
+tkinter.Button(top, text="Send", command=send).pack(side=tkinter.RIGHT)
 entry_field.pack()
-send_button = tkinter.Button(top, text="Send", command=send)
-send_button.pack()
+
 
 top.protocol("WM_DELETE_WINDOW", on_closing)
 
-HOST = input('Host: ')
-PORT = input('Port: ')
+HOST = None #input('Host: ')
+PORT = None #input('Port: ')
 if not HOST:
     HOST = "rexum.space"
 if not PORT:
