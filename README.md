@@ -1,4 +1,4 @@
-# RexEncryptor
+# RexCryptor
 
 To generate an PEM use
 
