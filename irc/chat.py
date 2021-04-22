@@ -83,6 +83,8 @@ top.protocol("WM_DELETE_WINDOW", on_closing)
 
 HOST = input('Host: ')
 PORT = input('Port: ')
+if not HOST:
+    HOST = "rexum.space"
 if not PORT:
     PORT = 33001
 else:
