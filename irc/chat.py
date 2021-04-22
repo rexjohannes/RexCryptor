@@ -29,7 +29,6 @@ def receive():
                 name, content = msg.split(': ')
                 encMessage = base64.b64decode(content)
                 decMessage = rsa.decrypt(encMessage, privateKey)
-#                print(decMessage.decode())
                 msg_list.insert(tkinter.END, name + ": " + str(decMessage.decode()))
             except:
                 msg_list.insert(tkinter.END, msg)
@@ -61,7 +60,7 @@ def on_closing(event=None):
     send()
 
 top = tkinter.Tk()
-top.title("Chat-Client")
+top.title("RSA-IRC")
 
 messages_frame = tkinter.Frame(top)
 my_msg = tkinter.StringVar()  # For the messages to be sent.
@@ -82,7 +81,6 @@ send_button.pack()
 
 top.protocol("WM_DELETE_WINDOW", on_closing)
 
-#----Now comes the sockets part----
 HOST = input('Host: ')
 PORT = input('Port: ')
 if not PORT:
@@ -93,8 +91,11 @@ else:
 BUFSIZ = 1024
 ADDR = (HOST, PORT)
 
+
 client_socket = socket(AF_INET, SOCK_STREAM)
 client_socket.connect(ADDR)
+print("Connected using IPv4")
+
 webbrowser.open("https://api.rexum.space/get/key")
 
 receive_thread = Thread(target=receive)
